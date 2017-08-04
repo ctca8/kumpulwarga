@@ -71,11 +71,22 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <label>
+                            Biaya Pinjam Luar
+                        </label>
+                        <span class="info-box-number" id="nominal3">
+                        </span>
+                        <input class="form-control" id="nominal3" name="biaya_pinjam_luar" onkeyup="document.getElementById('nominal3').innerHTML = formatCurrency(this.value);" placeholder="Biaya Pinjam Luar" type="number" value="<?php echo $biaya_pinjam_luar; ?>" />
+                    </div>
+                </div>
+                <!-- ./form-group -->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label>
                             Biaya Denda
                         </label>
-                        <span class="info-box-number" id="nominal">
+                        <span class="info-box-number" id="nominal2">
                         </span>
-                        <input class="form-control" id="nominal" name="biaya_denda" onkeyup="document.getElementById('nominal').innerHTML = formatCurrency(this.value);" placeholder="Biaya Pinjam" type="number" value="<?php echo $biaya_denda; ?>" />
+                        <input class="form-control" id="nominal2" name="biaya_denda" onkeyup="document.getElementById('nominal2').innerHTML = formatCurrency(this.value);" placeholder="Biaya Pinjam" type="number" value="<?php echo $biaya_denda; ?>" />
                     </div>
                 </div>
                 <!-- ./form-group -->

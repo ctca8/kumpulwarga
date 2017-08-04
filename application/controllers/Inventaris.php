@@ -85,6 +85,7 @@ class Inventaris extends CI_Controller {
 			'deskripsi_inventaris' => $this->input->post('deskripsi_inventaris',TRUE),
 			'kondisi_inventaris' => $this->input->post('kondisi_inventaris',TRUE),
 			'biaya_pinjam' => $this->input->post('biaya_pinjam',TRUE),
+			'biaya_pinjam_luar' => $this->input->post('biaya_pinjam_luar',TRUE),
 			'biaya_denda' => $this->input->post('biaya_denda',TRUE),
 			'gambar_inventaris' => $this->upload->data('file_name'),
 			);
@@ -163,10 +164,14 @@ class Inventaris extends CI_Controller {
         }
         
 		// JIKA PEMINJAM DARI LUAR RT
-		// HARGA SEHARUSNYA DARI DATABASE
         if ($data_inventaris->id_rt != $this->session->userdata('id_rt')) {
-        	// PERBEDAAN BIAYA PINJAM MASIH DARI PROGRAM
-			$bayar_total=$bayar_total + 3000;
+			if ($interval->days=="0") {
+				//JIKA INTERVAL HANYA SEHARI
+				$bayar_total=$data_inventaris->biaya_pinjam_luar * $this->input->post('jumlah_pinjam');
+			} else {
+				// JIKA LEBIH DARI SATU HARI
+				$bayar_total=$interval->days * $data_inventaris->biaya_pinjam_luar * $this->input->post('jumlah_pinjam');
+			}
         }
 
     	// SET DATA UNTUK INPUTAN DATABASE PEMINJAMAN
@@ -322,6 +327,7 @@ class Inventaris extends CI_Controller {
 			'deskripsi_inventaris' => $row->deskripsi_inventaris,
 			'kondisi_inventaris' => $row->kondisi_inventaris,
 			'biaya_pinjam' => $row->biaya_pinjam,
+			'biaya_pinjam_luar' => $row->biaya_pinjam_luar,
 			'biaya_denda' => $row->biaya_denda,
 			'gambar_inventaris' => $row->gambar_inventaris,
 			);
@@ -336,6 +342,8 @@ class Inventaris extends CI_Controller {
 			'deskripsi_inventaris' => $this->input->post('deskripsi_inventaris'),
 			'kondisi_inventaris' => $this->input->post('kondisi_inventaris'),
 			'biaya_pinjam' => $this->input->post('biaya_pinjam'),
+			'biaya_pinjam_luar' => $this->input->post('biaya_pinjam_luar'),
+			'biaya_denda' => $this->input->post('biaya_denda'),
 			);
 
 		$this->Inventaris_model->update($this->input->post('id_inventaris'), $data);

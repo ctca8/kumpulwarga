@@ -144,6 +144,14 @@
                 <!-- ./form-group -->
                 <div class="form-group">
                     <div class="col-sm-12">
+                        <span class="info-box-number" id="nominal3">
+                        </span>
+                        <input class="form-control" id="nominal3" name="biaya_pinjam_luar" onkeyup="document.getElementById('nominal3').innerHTML = formatCurrency(this.value);" placeholder="Biaya Pinjam Luar RT" type="number"/>
+                    </div>
+                </div>
+                <!-- ./form-group -->
+                <div class="form-group">
+                    <div class="col-sm-12">
                         <span class="info-box-number" id="nominal2">
                         </span>
                         <input class="form-control" id="nominal2" name="biaya_denda" onkeyup="document.getElementById('nominal2').innerHTML = formatCurrency(this.value);" placeholder="Biaya Denda" type="number"/>
