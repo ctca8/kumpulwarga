@@ -20,12 +20,12 @@ class Inventaris extends CI_Controller {
 	public function index()
 	{
 
-		// untuk menandai peminjaman inventaris yang memerlukan konfirmasi
+		// MANGAMBIL DATA PEMINJAMAN BERDASARKAN STATUSNYA
 		$list_konfirmasi_pinjam = $this->Peminjaman_model->get_by_status();
 
 		$list_inventaris = $this->Inventaris_model->get_all($this->session->userdata('id_rt'));
 
-		// mengambil data rt di dalam satu kelurahan
+		// MENGAMBIL DATA RT DALAM SATU KELURAHAN
 		$list_rt = $this->Riwayat_alamat_model->get_by_kelurahan($this->session->userdata('id_kel'));
 
 		$data = array(
@@ -36,6 +36,7 @@ class Inventaris extends CI_Controller {
 			'rt_data' => $list_rt,
 			);
 
+		// MENENTUKAN TAMPILAN UNTUK ADMIN ATAU USER
 		if ($this->session->userdata('status_jabatan')=="aktif" && $this->session->userdata('jabatan')=="1") {
 			$this->template->display('inventaris/admin_list_inventaris', $data);
 		} else {
@@ -47,7 +48,7 @@ class Inventaris extends CI_Controller {
 	public function inventaris_rt()
 	{
 
-		// mengambil data rt di dalam satu kelurahan
+		// MENGAMBIL DATA RT DALAM SATU KELUARAHAN
 		$list_rt = $this->Riwayat_alamat_model->get_by_kelurahan($this->session->userdata('id_kel'));
 
 		$list_inventaris = $this->Inventaris_model->get_all($this->input->post('id_rt'));
@@ -67,13 +68,13 @@ class Inventaris extends CI_Controller {
 
 		// SETTINGAN UNTUK UPLOAD GAMBAR
 		$config['upload_path']          = './assets/gambar/inventaris/';
-    $config['allowed_types']        = 'gif|jpg|png';
+    	$config['allowed_types']        = 'gif|jpg|png';
 		$config['overwrite'] = TRUE;
 		$config['encrypt_name'] = TRUE;
 
-    $this->load->library('upload', $config);
+	    $this->load->library('upload', $config);
 
-    	//memindahkan gambar ke folder gambar
+    	// MEMINDAHKAN GAMBAR KE FOLDER GAMBAR
     	$this->upload->do_upload('gambar_inventaris');
 
 		$data = array(
@@ -88,7 +89,7 @@ class Inventaris extends CI_Controller {
 			'gambar_inventaris' => $this->upload->data('file_name'),
 			);
 
-		// insert ke database
+		// INSERT KE DATABASE
 		$this->Inventaris_model->insert($data);
 
 		redirect(site_url('inventaris'));
@@ -125,14 +126,15 @@ class Inventaris extends CI_Controller {
 
 	public function form_pinjam($id_inventaris)
 	{
+		// AMBIL DATA INVENTARIS BERDASARKAN ID
 		$data_inventaris = $this->Inventaris_model->get_by_id($id_inventaris);
 
 		$data = array(
 			'title' => "inventaris",
-			'id_inventaris' => $id_inventaris,
 			'action' => site_url('inventaris/pinjam_action'),
 
 			// DATA INVENTARIS
+			'id_inventaris' => $id_inventaris,
 			'nama_inventaris' => $data_inventaris->nama_inventaris,
 			'jumlah_inventaris' => $data_inventaris->jumlah_inventaris,
 			'gambar_inventaris' => $data_inventaris->gambar_inventaris,
@@ -147,23 +149,27 @@ class Inventaris extends CI_Controller {
 
 		$data_inventaris = $this->Inventaris_model->get_by_id($this->input->post('id_inventaris'));
 
-				//HITUNG TOTAL BAYAR
-				$start_date = new DateTime($this->input->post('tgl_pinjam'));
+		// HITUNG TOTAL BAYAR
+		$start_date = new DateTime($this->input->post('tgl_pinjam'));
         $end_date = new DateTime($this->input->post('tgl_kembali'));
         $interval = $start_date->diff($end_date);
 
         if ($interval->days=="0") {
-					//JIKA INTERVAL HANYA SEHARI
-        	$bayar_total=$data_inventaris->biaya_pinjam*$this->input->post('jumlah_pinjam');
+			//JIKA INTERVAL HANYA SEHARI
+        	$bayar_total=$data_inventaris->biaya_pinjam * $this->input->post('jumlah_pinjam');
         } else {
-					$bayar_total=$interval->days*$data_inventaris->biaya_pinjam*$this->input->post('jumlah_pinjam');
+			// JIKA LEBIH DARI SATU HARI
+			$bayar_total=$interval->days * $data_inventaris->biaya_pinjam * $this->input->post('jumlah_pinjam');
         }
-        //JIKA PEMINJAM DARI LUAR RT
+        
+		// JIKA PEMINJAM DARI LUAR RT
+		// HARGA SEHARUSNYA DARI DATABASE
         if ($data_inventaris->id_rt != $this->session->userdata('id_rt')) {
-        	$bayar_total=$bayar_total+3000;
+        	// PERBEDAAN BIAYA PINJAM MASIH DARI PROGRAM
+			$bayar_total=$bayar_total + 3000;
         }
 
-    // SET DATA UNTUK INPUTAN DATABASE PEMINJAMAN
+    	// SET DATA UNTUK INPUTAN DATABASE PEMINJAMAN
 		$data = array(
 			'id_pdk' => $this->session->userdata('id_pdk'),
 			'id_inventaris' => $this->input->post('id_inventaris'),
@@ -179,6 +185,7 @@ class Inventaris extends CI_Controller {
 	}
 
 	// UNTUK MELAYANI REQUEST AJAX DETAIL PEMINJAMAN
+	// BELUM BISA JALAN
 	public function pinjam_detail()
 	{
 
@@ -255,8 +262,8 @@ class Inventaris extends CI_Controller {
 
 	        $this->Keuangan_model->insert($data_keuangan);
 
-	    // UPDATE KE DATABASE PEMINJAMAN
-	    $data_pinjam = array(
+			// UPDATE KE DATABASE PEMINJAMAN
+			$data_pinjam = array(
 				'jumlah_kembali' => $this->input->post('jumlah_kembali'),
 				'total_denda' => $total_denda,
 				'keterangan_kembali' => $this->input->post('keterangan_kembali'),
@@ -267,7 +274,7 @@ class Inventaris extends CI_Controller {
 		} else {
 			// SESI INI AKAN DIEKSEKUSI JIKA PEMINJAMAN DITOLAK
 			// UPDATE KE DATABASE PEMINJAMAN
-	    $data2 = array(
+	    	$data2 = array(
 				'status_peminjaman' => $status_peminjaman,
 				);
 			$this->Peminjaman_model->update($id_peminjaman, $data2);

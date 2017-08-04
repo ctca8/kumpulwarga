@@ -101,15 +101,16 @@
   <!-- ./box -->
 </div>
 <!-- ./col -->
-<div id="modal_peminjaman"></div>
+<div id="peminjaman_modal"></div>
 
+<!-- SCRIPTNYA BELUM BISA JALAN -->
 <script>
   function detail(id_peminjaman)
   {
     var id=id_peminjaman.value;
     var nama_inventaris=getElementById('nama_inventaris').value;
     $.ajax({
-      url: "<?php echo site_url('inventaris/pinjam_detail'); ?>",
+      url: "./inventaris/pinjam_detail",
       method: "POST",
       cache: false,
       data: {
@@ -117,7 +118,7 @@
         nama_inventaris: nama_inventaris,
       },
       success: function(html){
-        $('#modal_peminjaman').html(html);
+        $('#peminjaman_modal').html(html);
       }
     });
     return false;
