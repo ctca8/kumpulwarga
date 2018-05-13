@@ -1,6 +1,4 @@
-###########################################################
-SISTEM INFORMASI INVENTARIS DAN MEDIA PENGUMUMAN WARGA DESA
-###########################################################
+## SISTEM INFORMASI INVENTARIS DAN MEDIA PENGUMUMAN WARGA DESA
 
 Sistem Informasi Inventaris dan Media Pengumuman Warga Desa merupakan
 sebuah sistem yang berfungsi untuk mengelola data-data inventaris warga
